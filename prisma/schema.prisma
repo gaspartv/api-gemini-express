@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid()) @map("id")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+  disabledAt   DateTime? @map("disabled_at")
+  email        String    @unique @map("email")
+  emailHash    String    @map("email_hash")
+  passwordHash String    @map("password_hash")
+
+  @@index([email])
+  @@map("users")
+}
