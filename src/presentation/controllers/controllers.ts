@@ -1,22 +1,12 @@
-import {UsersCreateController} from "./users/users-create.controller";
-import {Application} from "express";
-import {UsersUpdateController} from "./users/users-update.controller";
-import {CompaniesCreateController} from "./company/companies-create.controller";
-import {CompaniesUpdateController} from "./company/companies-update.controller";
+import { usersController } from "./users.controller";
+import { Express } from "express";
+import { globalHandleError } from "../middlewares/global-error-handler";
+import { authController } from "./auth.controller";
 
-export class Controllers {
-  execute(app: Application) {
-    this.usersController(app);
-    this.companiesController(app);
-  }
-
-  private usersController(app: Application) {
-    new UsersCreateController().execute(app);
-    new UsersUpdateController().execute(app);
-  }
-
-  private  companiesController(app: Application) {
-    new CompaniesCreateController().execute(app);
-    new CompaniesUpdateController().execute(app);
-  }
+function controllers(app: Express): void {
+  app.use("/users", usersController);
+  app.use("/auth", authController);
+  app.use(globalHandleError);
 }
+
+export { controllers };

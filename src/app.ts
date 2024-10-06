@@ -1,27 +1,27 @@
-import 'dotenv/config';
-import express, { Application } from 'express';
-import {Controllers} from "./presentation/controllers/controllers";
+import "dotenv/config";
+import "express-async-errors";
+import express, { Express } from "express";
+import cors from "cors";
+import { controllers } from "./presentation/controllers/controllers";
+import { env } from "./infrastruture/configs/validate-env";
+import { PrismaClient } from "@prisma/client";
 
-class App {
-  app: Application = express();
-  port: number;
+const app: Express = express();
+const prisma = new PrismaClient();
+const port: number = Number(env.PORT);
 
-  constructor() {
-    this.app = express();
-    this.port = Number(process.env.PORT);
-    this.controllers();
-  }
+app.use(cors({ origin: "*" }));
+app.use(express.json());
+controllers(app);
 
-  controllers() {
-    new Controllers().execute(this.app);
-  }
+const server = app.listen(port, (): void => {
+  console.info(`PORT: ${port}`);
+});
 
-  start() {
-    this.app.listen(this.port, () => {
-      console.log(`PORT: ${this.port}`);
-    });
-  }
-}
+process.on("SIGINT", async (): Promise<void> => {
+  await prisma.$disconnect();
+  server.close();
+  console.info("Server closed");
+});
 
-const appInstance = new App();
-appInstance.start();
+export { app, prisma };
