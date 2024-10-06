@@ -5,5 +5,4 @@ export class UsersResponseDto {
   readonly deletedAt: string | null;
   readonly disabledAt: string | null;
   readonly email: string;
-  readonly passwordHash: string;
 }

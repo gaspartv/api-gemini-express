@@ -35,8 +35,8 @@ export class AuthEntity {
     return this._password;
   }
 
-  comparePassword(password: string): void {
-    const compare = Bcrypt.compare(password, this._password);
+  comparePassword(passwordHash: string): void {
+    const compare = Bcrypt.compare(this._password, passwordHash);
     if (!compare) throw new AuthEmailPasswordInvalidError();
   }
 }

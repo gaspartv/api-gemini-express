@@ -9,6 +9,7 @@ const envSchema = z.object({
   SECURITY_SALT: z.coerce.string(),
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.string(),
+  JWT_EXPIRES_IN: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

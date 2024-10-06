@@ -6,6 +6,7 @@ import cuid from "cuid";
 import { Crypto } from "../../infrastruture/security/crypto";
 import { Bcrypt } from "../../infrastruture/security/bcrypt";
 import { UserData } from "../types/users.data";
+import { UsersResponseDto } from "../../application/dtos/users/users-response.dto";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -60,6 +61,17 @@ export class UsersEntity extends BaseEntity {
     };
   }
 
+  get response(): UsersResponseDto {
+    return {
+      id: this.id,
+      createdAt: this.getDate(this.createdAt),
+      updatedAt: this.getDate(this.updatedAt),
+      deletedAt: this.getDate(this.deletedAt),
+      disabledAt: this.getDate(this.disabledAt),
+      email: this._emailHash,
+    };
+  }
+
   get email() {
     return this._email;
   }
@@ -87,10 +99,10 @@ export class UsersEntity extends BaseEntity {
     this.password = dto.password;
   }
 
-  set update(dto: UsersUpdate) {
+  set edit(dto: UsersUpdate) {
     this.updatedAt = new Date();
-    if (dto.email) this._email = dto.email;
-    if (dto.password) this._password = dto.password;
+    if (dto.email) this.email = dto.email;
+    if (dto.password) this.password = dto.password;
   }
 
   set changeEmail(email: string) {

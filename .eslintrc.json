@@ -18,11 +18,11 @@
   "root": true,
   "ignorePatterns": [".eslintrc.json"],
   "rules": {
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-explicit-any": ["warn"],
-    "@typescript-eslint/no-unused-vars": [1, { "args": "all" }],
+    "@typescript-eslint/no-unused-vars": ["warn", {
+      "args": "all"
+    }],
+    "unused-imports/no-unused-imports": "warn",
     "prettier/prettier": [
       "error",
       {
@@ -31,7 +31,6 @@
         "tabWidth": 2,
         "printWidth": 80
       }
-    ],
-    "unused-imports/no-unused-imports": "warn"
+    ]
   }
 }

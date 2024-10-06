@@ -2,29 +2,20 @@ import { UsersCreateDto } from "../../dtos/users/users-create.dto";
 import { UsersEntity } from "../../../domain/entities/users.entity";
 import { UsersResponseDto } from "../../dtos/users/users-response.dto";
 import { UsersRepositoryPrisma } from "../../../infrastruture/database/users.database";
-import UsersAlreadyExistsError from "../../../shared/errors/users-already-exists.error";
+import { usersAlreadyExistsService } from "../../services/users-already-exists.service";
 
-async function userCreateUseCase(
+async function usersCreateUseCase(
   dto: UsersCreateDto,
 ): Promise<UsersResponseDto> {
+  await usersAlreadyExistsService(dto.email);
+
   const User = new UsersEntity();
   User.create = dto;
 
   const database = new UsersRepositoryPrisma();
+  await database.save(User);
 
-  const userFound = await database.findByEmail(User.email);
-  if (userFound) {
-    throw new UsersAlreadyExistsError();
-  }
-
-  const userCreate = await database.save(User);
-  return {
-    ...userCreate,
-    disabledAt: User.getDate(userCreate.disabledAt),
-    createdAt: User.getDate(userCreate.createdAt),
-    updatedAt: User.getDate(userCreate.updatedAt),
-    deletedAt: User.getDate(userCreate.deletedAt),
-  };
+  return User.response;
 }
 
-export { userCreateUseCase };
+export { usersCreateUseCase };

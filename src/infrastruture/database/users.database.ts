@@ -4,13 +4,23 @@ import { prisma } from "../../app";
 import { UserData } from "../../domain/types/users.data";
 
 export class UsersRepositoryPrisma implements UsersRepository {
-  async save(User: UsersEntity): Promise<UserData> {
-    return prisma.user.create({
-      data: User.toJSON,
+  save(User: UsersEntity): Promise<UserData> {
+    return prisma.user.upsert({
+      where: { id: User.id },
+      update: User.toJSON,
+      create: User.toJSON,
     });
   }
 
-  async findByEmail(email: string): Promise<UserData | null> {
+  findByEmail(email: string): Promise<UserData | null> {
     return prisma.user.findUnique({ where: { email } });
+  }
+
+  findById(id: string): Promise<UserData | null> {
+    return prisma.user.findUnique({ where: { id } });
+  }
+
+  findAll(): Promise<UserData[]> {
+    return prisma.user.findMany();
   }
 }
