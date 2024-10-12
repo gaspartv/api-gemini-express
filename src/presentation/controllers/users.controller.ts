@@ -15,7 +15,7 @@ const usersController: Router = Router();
 
 usersController.post(
   "/register",
-  authJwtMiddleware,
+  // authJwtMiddleware,
   usersCreateNormalize,
   validateSchemaMiddleware(usersCreateSchema),
   usersCreateController,

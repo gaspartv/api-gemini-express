@@ -4,12 +4,18 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["dev", "homo", "prod"]),
   PORT: z.coerce.number(),
+  DATABASE_URL: z.string().url(),
+
   SECURITY_ALGORITHM: z.string(),
   SECURITY_SECRET: z.string(),
   SECURITY_SALT: z.coerce.string(),
-  DATABASE_URL: z.string().url(),
+
   JWT_SECRET: z.string(),
   JWT_EXPIRES_IN: z.string(),
+
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.coerce.number(),
+  REDIS_PASSWORD: z.string(),
 });
 
 const _env = envSchema.safeParse(process.env);

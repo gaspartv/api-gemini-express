@@ -49,12 +49,10 @@ export class BaseEntity {
     this._updatedAt = value;
   }
   set deletedAt(value: Date | null) {
-    this._updatedAt = value;
     this._deletedAt = value;
     this._disabledAt = value;
   }
   set disabledAt(value: Date | null) {
-    this._updatedAt = value;
     this._disabledAt = value;
   }
 }

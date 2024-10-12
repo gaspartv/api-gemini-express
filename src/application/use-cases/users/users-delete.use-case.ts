@@ -3,6 +3,7 @@ import { UsersRepositoryPrisma } from "../../../infrastruture/database/users.dat
 import { UsersEntity } from "../../../domain/entities/users.entity";
 import { UserData } from "../../../domain/types/users.data";
 import { userOrThrowService } from "../../services/user-or-throw.service";
+import { redisClient } from "../../../app";
 
 async function usersDeleteUseCase(id: string): Promise<messageResponseDto> {
   const userFound: UserData = await userOrThrowService(id);
@@ -11,6 +12,8 @@ async function usersDeleteUseCase(id: string): Promise<messageResponseDto> {
 
   const database = new UsersRepositoryPrisma();
   await database.save(User);
+
+  await redisClient.del(User.id);
 
   return { message: "User deleted successfully" };
 }

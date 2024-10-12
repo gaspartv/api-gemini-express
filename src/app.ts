@@ -5,6 +5,17 @@ import cors from "cors";
 import { controllers } from "./presentation/controllers/controllers";
 import { env } from "./infrastruture/configs/validate-env";
 import { PrismaClient } from "@prisma/client";
+import * as redis from "redis";
+
+const redisClient = redis.createClient({
+  url: `redis://${env.REDIS_HOST}:${env.REDIS_PORT}`,
+});
+
+redisClient.on("error", (err) => {
+  console.error("Redis error: ", err);
+});
+
+redisClient.connect().then((r) => r);
 
 const app: Express = express();
 const prisma = new PrismaClient();
@@ -24,4 +35,4 @@ process.on("SIGINT", async (): Promise<void> => {
   console.info("Server closed");
 });
 
-export { app, prisma };
+export { app, prisma, redisClient };

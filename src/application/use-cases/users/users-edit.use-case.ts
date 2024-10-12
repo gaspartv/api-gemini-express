@@ -5,6 +5,7 @@ import { UsersEditDto } from "../../dtos/users/users-edit.dto";
 import { UserData } from "../../../domain/types/users.data";
 import { usersAlreadyExistsService } from "../../services/users-already-exists.service";
 import { userOrThrowService } from "../../services/user-or-throw.service";
+import { redisClient } from "../../../app";
 
 async function usersEditUseCase(
   id: string,
@@ -19,6 +20,10 @@ async function usersEditUseCase(
 
   const database = new UsersRepositoryPrisma();
   await database.save(User);
+
+  await redisClient.set(User.id, JSON.stringify(User.response), {
+    EX: 3600,
+  });
 
   return User.response;
 }

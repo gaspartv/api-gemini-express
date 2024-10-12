@@ -5,6 +5,7 @@ import { UserData } from "../../domain/types/users.data";
 
 export class UsersRepositoryPrisma implements UsersRepository {
   save(User: UsersEntity): Promise<UserData> {
+    console.log(User.toJSON);
     return prisma.user.upsert({
       where: { id: User.id },
       update: User.toJSON,
